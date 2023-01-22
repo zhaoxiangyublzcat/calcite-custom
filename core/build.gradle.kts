@@ -40,7 +40,8 @@ dependencies {
     api(project(":linq4j"))
 
     api("com.fasterxml.jackson.core:jackson-annotations")
-    api("org.apache.calcite.avatica:avatica-core")
+//    api("org.apache.calcite.avatica:avatica-core")
+    api(files("/Users/blz/IdeaProjects/apache-calcite-1.26.0-src/core/src/main/resources/libs/avatica-core-1.17.0-SNAPSHOT.jar"))
     api("org.apiguardian:apiguardian-api")
 
     implementation("com.esri.geometry:esri-geometry-api")

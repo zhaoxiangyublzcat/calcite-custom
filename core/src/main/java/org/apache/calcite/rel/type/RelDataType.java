@@ -265,4 +265,8 @@ public interface RelDataType {
       return equals(that);
     }
   }
+
+  default String getChineseName() {
+    return null;
+  }
 }

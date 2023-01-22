@@ -772,7 +772,8 @@ public class CalcitePrepareImpl implements CalcitePrepare {
         true,
         false,
         false,
-        avaticaType.columnClassName());
+        avaticaType.columnClassName(),
+        fieldType.getChineseName());
   }
 
   private ColumnMetaData.AvaticaType avaticaType(JavaTypeFactory typeFactory,

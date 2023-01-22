@@ -70,7 +70,8 @@ public abstract class RelDataTypeFactoryImpl implements RelDataTypeFactory {
     for (int i = 0; i < key.names.size(); i++) {
       list.add(
           new RelDataTypeFieldImpl(
-              key.names.get(i), i, key.types.get(i)));
+              key.names.get(i), i, key.types.get(i),
+              key.chineseNames == null ? null : key.chineseNames.get(i)));
     }
     return new RelRecordType(key.kind, list.build(), key.nullable);
   }
@@ -147,6 +148,14 @@ public abstract class RelDataTypeFactoryImpl implements RelDataTypeFactory {
         fieldNameList, false);
   }
 
+  public RelDataType createStructType(StructKind kind,
+      final List<RelDataType> typeList,
+      final List<String> fieldNameList,
+      final List<String> fieldChineseNameList) {
+    return createStructType(kind, typeList,
+        fieldNameList, false, fieldChineseNameList);
+  }
+
   private RelDataType createStructType(StructKind kind,
       final List<RelDataType> typeList,
       final List<String> fieldNameList,
@@ -154,6 +163,16 @@ public abstract class RelDataTypeFactoryImpl implements RelDataTypeFactory {
     assert typeList.size() == fieldNameList.size();
     return canonize(kind, fieldNameList, typeList, nullable);
   }
+
+  private RelDataType createStructType(StructKind kind,
+      final List<RelDataType> typeList,
+      final List<String> fieldNameList,
+      final boolean nullable,
+      final List<String> fieldChineseNameList) {
+    assert typeList.size() == fieldNameList.size();
+    return canonize(kind, fieldNameList, typeList, nullable, fieldChineseNameList);
+  }
+
 
   @SuppressWarnings("deprecation")
   public RelDataType createStructType(
@@ -373,6 +392,24 @@ public abstract class RelDataTypeFactoryImpl implements RelDataTypeFactory {
     final ImmutableList<RelDataType> types2 = ImmutableList.copyOf(types);
     return KEY2TYPE_CACHE.getUnchecked(new Key(kind, names2, types2, nullable));
   }
+
+  protected RelDataType canonize(final StructKind kind,
+      final List<String> names,
+      final List<RelDataType> types,
+      final boolean nullable,
+      final List<String> chineseNames) {
+    final RelDataType type = KEY2TYPE_CACHE.getIfPresent(
+        new Key(kind, names, types, nullable, chineseNames));
+    if (type != null) {
+      return type;
+    }
+    final ImmutableList<String> names2 = ImmutableList.copyOf(names);
+    final ImmutableList<RelDataType> types2 = ImmutableList.copyOf(types);
+    final ImmutableList<String> chineseNames2 = ImmutableList.copyOf(chineseNames);
+    return KEY2TYPE_CACHE.getUnchecked(new Key(kind, names2, types2, nullable, chineseNames2));
+  }
+
+
 
   protected RelDataType canonize(final StructKind kind,
       final List<String> names,
@@ -656,15 +693,28 @@ public abstract class RelDataTypeFactoryImpl implements RelDataTypeFactory {
     private final List<RelDataType> types;
     private final boolean nullable;
 
+    private final List<String> chineseNames;
+
     Key(StructKind kind, List<String> names, List<RelDataType> types, boolean nullable) {
       this.kind = kind;
       this.names = names;
       this.types = types;
       this.nullable = nullable;
+      this.chineseNames = new ArrayList<>();
+      names.forEach(name -> chineseNames.add(null));
+    }
+
+    Key(StructKind kind, List<String> names, List<RelDataType> types, boolean nullable,
+        List<String> chineseNames) {
+      this.kind = kind;
+      this.names = names;
+      this.types = types;
+      this.nullable = nullable;
+      this.chineseNames = chineseNames;
     }
 
     @Override public int hashCode() {
-      return Objects.hash(kind, names, types, nullable);
+      return Objects.hash(kind, names, types, nullable, chineseNames);
     }
 
     @Override public boolean equals(Object obj) {
@@ -673,7 +723,8 @@ public abstract class RelDataTypeFactoryImpl implements RelDataTypeFactory {
           && kind == ((Key) obj).kind
           && names.equals(((Key) obj).names)
           && types.equals(((Key) obj).types)
-          && nullable == ((Key) obj).nullable;
+          && nullable == ((Key) obj).nullable
+          && chineseNames.equals(((Key) obj).chineseNames);
     }
   }
 }

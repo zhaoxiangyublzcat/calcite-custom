@@ -84,4 +84,6 @@ public interface RelDataTypeField extends Map.Entry<String, RelDataType> {
    * Returns true if this is a dynamic star field.
    */
   boolean isDynamicStar();
+
+  String getChineseName();
 }

@@ -246,7 +246,7 @@ public class Bindables {
       final List<RelDataTypeField> fieldList =
           table.getRowType().getFieldList();
       for (int project : projects) {
-        builder.add(fieldList.get(project));
+        builder.add(fieldList.get(project), null);
       }
       return builder.build();
     }

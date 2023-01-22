@@ -31,6 +31,8 @@ public class RelDataTypeFieldImpl implements RelDataTypeField, Serializable {
   private final String name;
   private final int index;
 
+  private final String chineseName;
+
   //~ Constructors -----------------------------------------------------------
 
   /**
@@ -45,12 +47,26 @@ public class RelDataTypeFieldImpl implements RelDataTypeField, Serializable {
     this.name = name;
     this.index = index;
     this.type = type;
+    this.chineseName = "";
+  }
+
+  public RelDataTypeFieldImpl(
+      String name,
+      int index,
+      RelDataType type,
+      String chineseName) {
+    assert name != null;
+    assert type != null;
+    this.name = name;
+    this.index = index;
+    this.type = type;
+    this.chineseName = chineseName;
   }
 
   //~ Methods ----------------------------------------------------------------
 
   @Override public int hashCode() {
-    return Objects.hash(index, name, type);
+    return Objects.hash(index, name, type, chineseName);
   }
 
   @Override public boolean equals(Object obj) {
@@ -63,7 +79,8 @@ public class RelDataTypeFieldImpl implements RelDataTypeField, Serializable {
     RelDataTypeFieldImpl that = (RelDataTypeFieldImpl) obj;
     return this.index == that.index
         && this.name.equals(that.name)
-        && this.type.equals(that.type);
+        && this.type.equals(that.type)
+        && this.chineseName.equals(that.chineseName);
   }
 
   // implement RelDataTypeField
@@ -98,11 +115,16 @@ public class RelDataTypeFieldImpl implements RelDataTypeField, Serializable {
 
   // for debugging
   public String toString() {
-    return "#" + index + ": " + name + " " + type;
+    return "#" + index + ": " + name + " " + type + " " + chineseName;
   }
 
   public boolean isDynamicStar() {
     return type.getSqlTypeName() == SqlTypeName.DYNAMIC_STAR;
+  }
+
+  @Override
+  public String getChineseName() {
+    return chineseName;
   }
 
 }

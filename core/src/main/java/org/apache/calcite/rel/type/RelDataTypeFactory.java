@@ -81,6 +81,11 @@ public interface RelDataTypeFactory {
       List<RelDataType> typeList,
       List<String> fieldNameList);
 
+  RelDataType createStructType(StructKind kind,
+      List<RelDataType> typeList,
+      List<String> fieldNameList,
+      List<String> fieldChineseNameList);
+
   /** Creates a type that represents a structured collection of fields.
    * Shorthand for <code>createStructType(StructKind.FULLY_QUALIFIED, typeList,
    * fieldNameList)</code>. */
@@ -423,6 +428,8 @@ public interface RelDataTypeFactory {
     private final RelDataTypeFactory typeFactory;
     private boolean nullableRecord = false;
 
+    private final List<String> chineseNames = new ArrayList<>();
+
     /**
      * Creates a Builder with the given type factory.
      */
@@ -465,6 +472,13 @@ public interface RelDataTypeFactory {
     public Builder add(String name, RelDataType type) {
       names.add(name);
       types.add(type);
+      return this;
+    }
+
+    public Builder add(String name, RelDataType type, String chineseName) {
+      names.add(name);
+      types.add(type);
+      chineseNames.add(chineseName);
       return this;
     }
 
@@ -532,6 +546,11 @@ public interface RelDataTypeFactory {
       return this;
     }
 
+    public Builder add(RelDataTypeField field, String chineseName) {
+      add(field.getName(), field.getType(), chineseName);
+      return this;
+    }
+
     /**
      * Adds all fields in a collection.
      */
@@ -572,7 +591,7 @@ public interface RelDataTypeFactory {
      */
     public RelDataType build() {
       return typeFactory.createTypeWithNullability(
-          typeFactory.createStructType(kind, types, names),
+          typeFactory.createStructType(kind, types, names, chineseNames),
           nullableRecord);
     }
 
