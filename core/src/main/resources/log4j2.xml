@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--日志级别以及优先级排序: OFF > FATAL > ERROR > WARN > INFO > DEBUG > TRACE > ALL -->
+<!--Configuration后面的status，这个用于设置log4j2自身内部的信息输出，可以不设置，当设置成trace时，你会看到log4j2内部各种详细输出-->
+<!--monitorInterval：Log4j能够自动检测修改配置 文件和重新配置本身，可设置一个非零的间隔秒数来检测配置变更 -->
+<Configuration status="WARN" monitorInterval="60">
+    <!-- 自定义一些变量 -->
+    <Properties>
+        <!-- 变量定义 -->
+        <Property name="log_base_dir">/tmp/calcite-custom</Property>
+        <!-- Appender在将日志数据写入目标位置之前，一般会将日志数据通过Layout进行格式化。PatternLayout可以使用与C语言printf函数类似
+        的转换模式来指定输出格式。常见的配置如下：
+        - %d{yyyy-MM-dd HH:mm:ss.SSS} : 日志生成时间，输出格式为“年-月-日 时:分:秒.毫秒”
+        - %p : 日志输出格式
+        - %c : logger的名称
+        - %m : 日志内容，即 logger.info("message")
+        - %n : 换行符
+        - %T : 线程号
+        - %L : 日志输出所在行数
+        - %M : 日志输出所在方法名 -->
+        <Property name="log_pattern">[%d{yyyy-MM-dd HH:mm:ss.SSS}][%-5p][%T][%c.%M:%L] %msg%xEx%n</Property>
+        <!-- 单个日志文件最大大小，单位可以是KB, MB or GB -->
+        <Property name="max_single_file_size">1MB</Property>
+    </Properties>
+
+    <!-- 使用Appenders元素可以将日志事件数据写到各种目标位置（目前可以为控制台、文件、多种数据库API、远程套接字服务器、Apache Flume、
+    JMS、远程UNIX Syslog daemon），其内的每个Appender都必须要有一个name属性作为唯一标识，该标识的值在Logger中通过AppenderRef来引
+    用，从而将该Appender配置到该Logger中 -->
+    <Appenders>
+        <!-- Console Appender常用于将日志输出到System.out，一般用在开发环境 -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <!-- 只接受程序中DEBUG级别的日志进行处理-->
+            <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            <!-- 在大多数情况下，Appender将格式化LogEvent的责任委托给Layout -->
+            <PatternLayout pattern="${log_pattern}"/>
+        </Console>
+
+        <!--        <RollingFile name="RollingFile" fileName="${log_base_dir}/my_app_error.log"-->
+        <!--                     filePattern="${log_base_dir}/$${date:yyyy_MM_dd}/my_app_error_%d{yyyy_MM_dd_HH}_%i.log.gz">-->
+        <!--            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>-->
+        <!--            <PatternLayout pattern="${log_pattern}"/>-->
+        <!--            <Policies>-->
+        <!--                <TimeBasedTriggeringPolicy/>-->
+        <!--                <SizeBasedTriggeringPolicy size="${max_single_file_size}"/>-->
+        <!--            </Policies>-->
+        <!--            <DefaultRolloverStrategy fileIndex="nomax">-->
+        <!--                <Delete basePath="${log_base_dir}" maxDepth="2">-->
+        <!--                    <IfFileName glob="*/my_app_error_*.log.gz">-->
+        <!--                        <IfAny>-->
+        <!--                            <IfAccumulatedFileSize exceeds="3GB"/>-->
+        <!--                            <IfAccumulatedFileCount exceeds="3000"/>-->
+        <!--                            <IfLastModified age="30d"/>-->
+        <!--                        </IfAny>-->
+        <!--                    </IfFileName>-->
+        <!--                </Delete>-->
+        <!--            </DefaultRolloverStrategy>-->
+        <!--        </RollingFile>-->
+    </Appenders>
+
+    <!--定义logger，只有定义了logger并引入的appender，appender才会生效-->
+    <Loggers>
+        <!-- 当Logger在配置文件中声明时，就创建了一个LoggerConfig对象，两者一一对应，LoggerConfig包含一些Filter、这些
+        Filters用于过滤传递给任意Appender的LogEvent，它还包含一些Appender的引用。Logger本身执行无指向的动作，它仅含有一
+        个与LoggerConfig关联的名称（通过name属性指定），root Logger具有固定的默认名称，其他Logger需要指定各自的name属性
+        值。LoggerConfig会被分配一个日志级别，通过level属性来指定。内建的日志级别按优先级从高到底排序有：OFF > FATAL >
+        ERROR > WARN > INFO > DEBUG > TRACE > ALL，Log4j 2 也支持自定义的日志级别。
+        -->
+        <Root level="ALL">
+            <AppenderRef ref="Console"/>
+            <!--            <AppenderRef ref="RollingFile"/>-->
+        </Root>
+
+        <!-- 每个LoggerConfig的日志级别如果没有显式配置，则会继承其父级LoggerConfig的日志级别，而root LoggerConfig如果没
+        有配置日志级别，则会为其分配一个默认的ERROR级别 -->
+        <!-- 某个Logger所允许的每条日志打印请求都会传递给其LoggerConfig中的所有Appender，也会传递给该LoggerConfig的parent
+        LoggerConfig中的Appender，这种现象称为相加性（Additivity）。也就是说，Appender会从LoggerConfig的继承中继承相加性。这种特
+        性可以用来汇整某几个logger的输出，可以在声明Logger的配置文件中设置additivity="false"来禁用这种叠加继承 -->
+        <!--记录druid-sql的记录-->
+
+        <!--过滤掉spring和mybatis的一些无用的DEBUG信息-->
+        <Logger name="org.springframework" level="INFO"/>
+        <Logger name="org.mybatis" level="INFO"/>
+
+        <!--log4j2 自带过滤日志-->
+        <Logger name="org.apache.catalina.startup.DigesterFactory" level="error"/>
+        <Logger name="org.apache.catalina.util.LifecycleBase" level="error"/>
+        <Logger name="org.apache.coyote.http11.Http11NioProtocol" level="warn"/>
+        <Logger name="org.apache.sshd.common.util.SecurityUtils" level="warn"/>
+        <Logger name="org.apache.tomcat.util.net.NioSelectorPool" level="warn"/>
+        <Logger name="org.crsh.plugin" level="warn"/>
+        <Logger name="org.crsh.ssh" level="warn"/>
+        <Logger name="org.eclipse.jetty.util.component.AbstractLifeCycle" level="error"/>
+        <Logger name="org.hibernate.validator.internal.util.Version" level="warn"/>
+        <Logger name="org.springframework.boot.actuate.autoconfigure.CrshAutoConfiguration" level="warn"/>
+        <Logger name="org.springframework.boot.actuate.endpoint.jmx" level="warn"/>
+        <Logger name="org.thymeleaf" level="warn"/>
+    </Loggers>
+</Configuration>
