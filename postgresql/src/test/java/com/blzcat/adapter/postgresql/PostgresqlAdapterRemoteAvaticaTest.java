@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
-public class PostgresqlAdapterTest {
+public class PostgresqlAdapterRemoteAvaticaTest {
     private static Connection conn;
 
     @BeforeEach
@@ -30,7 +30,7 @@ public class PostgresqlAdapterTest {
             "not found").getPath();
 
         Properties config = new Properties();
-        config.put("model", resourcePatch + "model.yaml");
+        config.put("model", resourcePatch + "model.json");
 
         conn = DriverManager.getConnection("jdbc:calcite:", config);
     }
@@ -44,7 +44,7 @@ public class PostgresqlAdapterTest {
 
     @Test
     public void testEasySelect() {
-        String sql = "SELECT * FROM \"PG\".\"t1\"";
+        String sql = "SELECT * FROM \"pg\".\"t1\"";
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             new PrintTable(rs).printTable();
@@ -55,7 +55,7 @@ public class PostgresqlAdapterTest {
 
     @Test
     public void testEasyInsert() {
-        String sql = "INSERT INTO \"PG\".\"t1\" VALUES ('sdf','abc')";
+        String sql = "INSERT INTO \"pg\".\"t1\" VALUES ('sdf','abc')";
         try (Statement stmt = conn.createStatement()) {
             int i = stmt.executeUpdate(sql);
             assertEquals(i, 1);
@@ -66,7 +66,7 @@ public class PostgresqlAdapterTest {
 
     @Test
     public void testEasyUpdate() {
-        String sql = "UPDATE \"PG\".\"t1\" SET \"c2\"='def' WHERE \"c1\"='sdf'";
+        String sql = "UPDATE \"pg\".\"t1\" SET \"c2\"='def' WHERE \"c1\"='sdf'";
         try (Statement stmt = conn.createStatement()) {
             int i = stmt.executeUpdate(sql);
             log.info("update {} count success!", i);
@@ -77,10 +77,21 @@ public class PostgresqlAdapterTest {
 
     @Test
     public void testEasyDelete() {
-        String sql = "DELETE FROM \"PG\".\"t1\"";
+        String sql = "DELETE FROM \"pg\".\"t1\"";
         try (Statement stmt = conn.createStatement()) {
             int i = stmt.executeUpdate(sql);
             log.info("delete {} count success!", i);
+        } catch (SQLException e) {
+            throw TestUtil.rethrow(e);
+        }
+    }
+
+    @Test
+    public void testSelectError() {
+        String sql = "SELECT * FROM \"gp\".\"t1\"";
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            new PrintTable(rs).printTable();
         } catch (SQLException e) {
             throw TestUtil.rethrow(e);
         }

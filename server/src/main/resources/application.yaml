@@ -1,0 +1,6 @@
+calcite:
+  model:
+    path: classpath:model.yaml
+logging:
+  level:
+    root: DEBUG

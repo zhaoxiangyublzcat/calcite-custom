@@ -6,7 +6,6 @@
     <!-- 自定义一些变量 -->
     <Properties>
         <!-- 变量定义 -->
-        <Property name="log_base_dir">/tmp/calcite-custom</Property>
         <!-- Appender在将日志数据写入目标位置之前，一般会将日志数据通过Layout进行格式化。PatternLayout可以使用与C语言printf函数类似
         的转换模式来指定输出格式。常见的配置如下：
         - %d{yyyy-MM-dd HH:mm:ss.SSS} : 日志生成时间，输出格式为“年-月-日 时:分:秒.毫秒”
@@ -33,27 +32,6 @@
             <!-- 在大多数情况下，Appender将格式化LogEvent的责任委托给Layout -->
             <PatternLayout pattern="${log_pattern}"/>
         </Console>
-
-        <!--        <RollingFile name="RollingFile" fileName="${log_base_dir}/my_app_error.log"-->
-        <!--                     filePattern="${log_base_dir}/$${date:yyyy_MM_dd}/my_app_error_%d{yyyy_MM_dd_HH}_%i.log.gz">-->
-        <!--            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>-->
-        <!--            <PatternLayout pattern="${log_pattern}"/>-->
-        <!--            <Policies>-->
-        <!--                <TimeBasedTriggeringPolicy/>-->
-        <!--                <SizeBasedTriggeringPolicy size="${max_single_file_size}"/>-->
-        <!--            </Policies>-->
-        <!--            <DefaultRolloverStrategy fileIndex="nomax">-->
-        <!--                <Delete basePath="${log_base_dir}" maxDepth="2">-->
-        <!--                    <IfFileName glob="*/my_app_error_*.log.gz">-->
-        <!--                        <IfAny>-->
-        <!--                            <IfAccumulatedFileSize exceeds="3GB"/>-->
-        <!--                            <IfAccumulatedFileCount exceeds="3000"/>-->
-        <!--                            <IfLastModified age="30d"/>-->
-        <!--                        </IfAny>-->
-        <!--                    </IfFileName>-->
-        <!--                </Delete>-->
-        <!--            </DefaultRolloverStrategy>-->
-        <!--        </RollingFile>-->
     </Appenders>
 
     <!--定义logger，只有定义了logger并引入的appender，appender才会生效-->
@@ -66,7 +44,6 @@
         -->
         <Root level="ALL">
             <AppenderRef ref="Console"/>
-            <!--            <AppenderRef ref="RollingFile"/>-->
         </Root>
 
         <!-- 每个LoggerConfig的日志级别如果没有显式配置，则会继承其父级LoggerConfig的日志级别，而root LoggerConfig如果没
@@ -74,11 +51,6 @@
         <!-- 某个Logger所允许的每条日志打印请求都会传递给其LoggerConfig中的所有Appender，也会传递给该LoggerConfig的parent
         LoggerConfig中的Appender，这种现象称为相加性（Additivity）。也就是说，Appender会从LoggerConfig的继承中继承相加性。这种特
         性可以用来汇整某几个logger的输出，可以在声明Logger的配置文件中设置additivity="false"来禁用这种叠加继承 -->
-        <!--记录druid-sql的记录-->
-
-        <!--过滤掉spring和mybatis的一些无用的DEBUG信息-->
-        <Logger name="org.springframework" level="INFO"/>
-        <Logger name="org.mybatis" level="INFO"/>
 
         <!--log4j2 自带过滤日志-->
         <Logger name="org.apache.catalina.startup.DigesterFactory" level="error"/>

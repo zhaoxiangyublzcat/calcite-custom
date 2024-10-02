@@ -36,5 +36,5 @@ ij_java_align_multiline_parameters = false
 indent_size = 2
 max_line_length = 240
 
-[*.yaml]
+[*.{json,yml,yaml}]
 indent_size = 2

@@ -31,6 +31,5 @@ public class MyTest {
         SqlNode sqlNode = parser.parseQuery();
         assertInstanceOf(CreateMaterializedView.class, sqlNode);
         System.out.println(sqlNode);
-        log.error("错误{}xxxx", " 对不对 ");
     }
 }
