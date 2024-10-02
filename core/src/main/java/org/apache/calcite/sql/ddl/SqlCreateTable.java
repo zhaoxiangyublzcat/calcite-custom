@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.blzcat.extend.ddl;
+package org.apache.calcite.sql.ddl;
 
 import org.apache.calcite.sql.SqlCreate;
 import org.apache.calcite.sql.SqlIdentifier;
@@ -39,6 +39,9 @@ public class SqlCreateTable extends SqlCreate {
     public final SqlIdentifier name;
     public final @Nullable SqlNodeList columnList;
     public final @Nullable SqlNode query;
+
+    private static final SqlOperator OPERATOR =
+        new SqlSpecialOperator("CREATE TABLE", SqlKind.CREATE_TABLE);
 
     /**
      * 所属用户
@@ -65,13 +68,18 @@ public class SqlCreateTable extends SqlCreate {
      */
     public @Nullable SqlIdentifier dividedField;
 
-    private static final SqlOperator OPERATOR =
-        new SqlSpecialOperator("CREATE TABLE", SqlKind.CREATE_TABLE);
-
     /**
      * Creates a SqlCreateTable.
      */
-    public SqlCreateTable(SqlParserPos pos, boolean replace, boolean ifNotExists,
+    protected SqlCreateTable(SqlParserPos pos, boolean replace, boolean ifNotExists,
+        SqlIdentifier name, @Nullable SqlNodeList columnList, @Nullable SqlNode query) {
+        super(OPERATOR, pos, replace, ifNotExists);
+        this.name = Objects.requireNonNull(name, "name");
+        this.columnList = columnList; // may be null
+        this.query = query; // for "CREATE TABLE ... AS query"; may be null
+    }
+
+    protected SqlCreateTable(SqlParserPos pos, boolean replace, boolean ifNotExists,
         SqlIdentifier name, @Nullable SqlNodeList columnList, @Nullable SqlNode query,
         SqlNode owner,
         SqlNode group,
@@ -80,8 +88,8 @@ public class SqlCreateTable extends SqlCreate {
         @Nullable SqlIdentifier dividedField) {
         super(OPERATOR, pos, replace, ifNotExists);
         this.name = Objects.requireNonNull(name, "name");
-        this.columnList = columnList; // may be null
-        this.query = query; // for "CREATE TABLE ... AS query"; may be null
+        this.columnList = columnList;
+        this.query = query;
         this.owner = Objects.requireNonNull(owner, "owner");
         this.group = Objects.requireNonNull(group, "group");
         this.propertyList = Objects.requireNonNull(propertyList, "propertyList");
@@ -103,36 +111,6 @@ public class SqlCreateTable extends SqlCreate {
             writer.keyword("IF NOT EXISTS");
         }
         name.unparse(writer, leftPrec, rightPrec);
-
-        unparseColumnList(writer);
-
-        if (query != null) {
-            writer.keyword("AS");
-            writer.newlineAndIndent();
-            query.unparse(writer, 0, 0);
-        }
-
-        writer.keyword("OWNER TO");
-        owner.unparse(writer, 0, 0);
-
-        writer.keyword("GROUP TO");
-        owner.unparse(writer, 0, 0);
-
-        writer.keyword("TBLPROPERTIES");
-        SqlWriter.Frame frame = writer.startList("(", ")");
-        for (SqlNode property : propertyList) {
-            writer.sep(",");
-            property.unparse(writer, 0, 0);
-        }
-        writer.endList(frame);
-
-        if (dividedField != null && dividedDay != null) {
-            writer.keyword("DIVIDED BY DAY");
-            dividedField.unparse(writer, 0, 0);
-        }
-    }
-
-    private void unparseColumnList(SqlWriter writer) {
         if (columnList != null) {
             SqlWriter.Frame frame = writer.startList("(", ")");
             for (SqlNode c : columnList) {
@@ -140,6 +118,11 @@ public class SqlCreateTable extends SqlCreate {
                 c.unparse(writer, 0, 0);
             }
             writer.endList(frame);
+        }
+        if (query != null) {
+            writer.keyword("AS");
+            writer.newlineAndIndent();
+            query.unparse(writer, 0, 0);
         }
     }
 }

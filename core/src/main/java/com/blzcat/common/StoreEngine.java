@@ -1,4 +1,4 @@
-package com.blzcat.extend.common;
+package com.blzcat.common;
 
 import org.apache.calcite.linq4j.Enumerator;
 

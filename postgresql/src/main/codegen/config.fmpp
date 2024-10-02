@@ -51,32 +51,32 @@ data: {
       "org.apache.calcite.sql.ddl.SqlCreateTableLike"
       "org.apache.calcite.sql.ddl.SqlDdlNodes"
       "org.apache.calcite.sql.ddl.SqlDdlNodes"
-      "com.blzcat.extend.ddl.SqlCreateTable"
-      "com.blzcat.extend.ddl.SqlTableOption"
+      "org.apache.calcite.sql.ddl.SqlCreateTable"
+      "com.blzcat.ddl.SqlTableOption"
+      "com.blzcat.adapter.postgresql.ddl.PostgresqlSqlCreateTable"
     ]
 
     keywords: [
-      "MATERIALIZED"
       "IF"
       "VIRTUAL"
       "STORED"
       "OWNER"
       "DIVIDED"
-      "PARTITIONED"
       "TBLPROPERTIES"
     ]
 
     nonReservedKeywords: [
-      "IF"
-      "PARTITIONED"
+      "OWNER"
+      "DIVIDED"
+      "TBLPROPERTIES"
     ]
 
     nonReservedKeywordsToAdd: [
-      "IF"
+      "OWNER"
     ]
 
     nonReservedKeywordsToRemove: [
-      "IF"
+      "OWNER"
     ]
 
     literalParserMethods: [ ]

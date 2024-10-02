@@ -14,16 +14,16 @@ SqlNodeList TableElementList() :
 }
 {
     <LPAREN> { s = span(); }
-    TableElementCustom(list)
+    TableElement(list)
     (
-        <COMMA> TableElementCustom(list)
+        <COMMA> TableElement(list)
     )*
     <RPAREN> {
         return new SqlNodeList(list, s.end(this));
     }
 }
 
-void TableElementCustom(List<SqlNode> list) :
+void TableElement(List<SqlNode> list) :
 {
     final SqlIdentifier id;
     final SqlDataTypeSpec type;
@@ -213,7 +213,7 @@ SqlCreate CreateTable(Span s, boolean replace) :
         <TBLPROPERTIES> propertyList = TableProperties()
         <DIVIDED> <BY> <DAY> dividedDay = UnsignedIntLiteral() dividedField = SimpleIdentifier()
         {
-            return new SqlCreateTable(s.end(this), replace, ifNotExists, id, tableElementList, query, owner, group,
+            return new PostgresqlSqlCreateTable(s.end(this), replace, ifNotExists, id, tableElementList, query, owner, group,
             propertyList, dividedDay, dividedField);
         }
     )

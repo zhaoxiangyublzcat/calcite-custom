@@ -70,6 +70,22 @@ public class SqlDdlNodes {
             query);
     }
 
+    public static SqlCreateTable createTable(
+        SqlParserPos pos,
+        boolean replace,
+        boolean ifNotExists,
+        SqlIdentifier name,
+        SqlNodeList columnList,
+        SqlNode query,
+        SqlNode owner,
+        SqlNode group,
+        SqlNodeList propertyList,
+        Integer dividedDay,
+        SqlIdentifier dividedField) {
+        return new SqlCreateTable(pos, replace, ifNotExists, name, columnList,
+            query, owner, group, propertyList, dividedDay, dividedField);
+    }
+
     /**
      * Creates a CREATE TABLE LIKE.
      */

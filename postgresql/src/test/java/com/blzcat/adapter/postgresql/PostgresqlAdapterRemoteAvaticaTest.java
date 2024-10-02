@@ -2,7 +2,7 @@ package com.blzcat.adapter.postgresql;
 
 import org.apache.calcite.util.TestUtil;
 
-import com.blzcat.extend.util.PrintTable;
+import com.blzcat.util.PrintTable;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -105,7 +105,7 @@ public class PostgresqlAdapterRemoteAvaticaTest {
             .append("  `vc` VARCHAR,\n")
             .append("  `tc` TIMESTAMP NOT NULL\n")
             .append(") OWNER TO 'superuser' GROUP TO 'public' TBLPROPERTIES (\n")
-            .append("  'ddl.dw.type' = 'row'\n")
+            .append("  'ddl.appendonly.enable' = 'row'\n")
             .append(") DIVIDED BY DAY 1 tc;")
             .toString();
         try (Statement stmt = conn.createStatement()) {

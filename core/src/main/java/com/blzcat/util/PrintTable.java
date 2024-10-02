@@ -1,4 +1,4 @@
-package com.blzcat.extend.util;
+package com.blzcat.util;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
