@@ -1,6 +1,8 @@
 root = true
 
 [*]
+indent_size = 4
+tab_width = 4
 trim_trailing_whitespace = true
 insert_final_newline = true
 charset = utf-8
@@ -9,10 +11,8 @@ indent_style = space
 [*.java]
 # Doc: https://youtrack.jetbrains.com/issue/IDEA-170643#focus=streamItem-27-3708697.0-0
 # $ means "static"
-ij_java_imports_layout = org.apache.calcite.**,|,org.apache.**,|,au.com.**,|,com.**,|,io.**,|,mondrian.**,|,net.**,|,org.**,|,scala.**,|,java.**,javax.**,|,*,|,$com.**,|,$org.apache.calcite.**,|,$org.apache.**,|,$org.**,|,$java,|,$*
-indent_size = 4
-tab_width = 4
-max_line_length = 100
+ij_java_imports_layout = org.apache.calcite.**, |, org.apache.**, |, au.com.**, |, com.**, |, io.**, |, mondrian.**, |, net.**, |, org.**, |, scala.**, |, java.**, javax.**, |, *, |, $com.**, |, $org.apache.calcite.**, |, $org.apache.**, |, $org.**, |, $java, |, $*
+# max_line_length = 100
 ij_any_spaces_around_additive_operators = true
 ij_any_spaces_around_assignment_operators = true
 ij_any_spaces_around_bitwise_operators = true
@@ -32,9 +32,7 @@ ij_java_use_single_class_imports = true
 ij_java_wrap_long_lines = true
 ij_java_align_multiline_parameters = false
 
-[*.ftl]
+[*.fmpp]
 indent_size = 2
+tab_width = 2
 max_line_length = 240
-
-[*.{json,yml,yaml}]
-indent_size = 2

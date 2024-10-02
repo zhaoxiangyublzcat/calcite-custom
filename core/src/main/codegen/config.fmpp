@@ -44,26 +44,39 @@ data: {
     class: "SqlParserImpl",
 
     imports: [
-        "com.blzcat.extend.ddl.CreateMaterializedView"
+      "org.apache.calcite.schema.ColumnStrategy"
+      "org.apache.calcite.sql.SqlCreate"
+      "org.apache.calcite.sql.SqlDrop"
+      "org.apache.calcite.sql.SqlTruncate"
+      "org.apache.calcite.sql.ddl.SqlCreateTableLike"
+      "org.apache.calcite.sql.ddl.SqlDdlNodes"
+      "org.apache.calcite.sql.ddl.SqlDdlNodes"
+      "com.blzcat.extend.ddl.SqlCreateTable"
+      "com.blzcat.extend.ddl.SqlTableOption"
     ]
 
     keywords: [
-        "MATERIALIZED",
-        "IF",
-        "PARTITIONED"
+      "MATERIALIZED"
+      "IF"
+      "VIRTUAL"
+      "STORED"
+      "OWNER"
+      "DIVIDED"
+      "PARTITIONED"
+      "TBLPROPERTIES"
     ]
 
     nonReservedKeywords: [
-        "IF",
-        "PARTITIONED"
+      "IF"
+      "PARTITIONED"
     ]
 
     nonReservedKeywordsToAdd: [
-        "IF"
+      "IF"
     ]
 
     nonReservedKeywordsToRemove: [
-        "IF"
+      "IF"
     ]
 
     literalParserMethods: [ ]
@@ -75,10 +88,10 @@ data: {
     alterStatementParserMethods: [ ]
 
     statementParserMethods: [
-        "SqlCreateMaterializedView()"
     ]
 
     createStatementParserMethods: [
+      "CreateTable"
     ]
 
     dropStatementParserMethods: [

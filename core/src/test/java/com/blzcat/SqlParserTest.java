@@ -1,5 +1,9 @@
 package com.blzcat;
 
+import com.blzcat.extend.ddl.SqlCreateTable;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.apache.calcite.avatica.util.Casing;
 import org.apache.calcite.avatica.util.Quoting;
 import org.apache.calcite.sql.SqlNode;
@@ -7,29 +11,32 @@ import org.apache.calcite.sql.parser.SqlParseException;
 import org.apache.calcite.sql.parser.SqlParser;
 import org.apache.calcite.sql.parser.impl.SqlParserImpl;
 
-import com.blzcat.extend.ddl.CreateMaterializedView;
-
 import org.junit.jupiter.api.Test;
-
-import lombok.extern.slf4j.Slf4j;
 
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 @Slf4j
-public class MyTest {
-
+public class SqlParserTest {
     @Test
     public void test() throws SqlParseException {
-        String sql = "CREATE MATERIALIZED VIEW IF NOT EXISTS \"test\".\"demo\"" +
-            ".\"materializationName\" AS SELECT * FROM \"system\"";
+        String sql =
+            new StringBuilder()
+                .append("CREATE TABLE IF NOT EXISTS pg.t2(\n")
+                .append("  \"ic\" INTEGER NOT NULL PRIMARY KEY,\n")
+                .append("  \"vc\" VARCHAR,\n")
+                .append("  \"tc\" TIMESTAMP NOT NULL\n")
+                .append(") OWNER TO 'superuser' GROUP TO 'public' TBLPROPERTIES (\n")
+                .append("  'ddl.dw.type' = 'row'\n")
+                .append(") DIVIDED BY DAY 1 tc").toString();
 
         SqlParser.Config myConfig = SqlParser.config()
             .withQuoting(Quoting.DOUBLE_QUOTE)
             .withQuotedCasing(Casing.UNCHANGED)
-            .withParserFactory(SqlParserImpl.FACTORY);
+            .withParserFactory(SqlParserImpl.FACTORY)
+            .withCaseSensitive(false);
         SqlParser parser = SqlParser.create(sql, myConfig);
         SqlNode sqlNode = parser.parseQuery();
-        assertInstanceOf(CreateMaterializedView.class, sqlNode);
+        assertInstanceOf(SqlCreateTable.class, sqlNode);
         System.out.println(sqlNode);
     }
 }

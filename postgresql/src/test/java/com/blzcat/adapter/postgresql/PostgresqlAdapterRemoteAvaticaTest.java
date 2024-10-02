@@ -97,4 +97,23 @@ public class PostgresqlAdapterRemoteAvaticaTest {
         }
     }
 
+    @Test
+    public void testCreate() {
+        String sql = new StringBuilder()
+            .append("CREATE TABLE IF NOT EXISTS pg.t2(\n")
+            .append("  `ic` INTEGER NOT NULL PRIMARY KEY,\n")
+            .append("  `vc` VARCHAR,\n")
+            .append("  `tc` TIMESTAMP NOT NULL\n")
+            .append(") OWNER TO 'superuser' GROUP TO 'public' TBLPROPERTIES (\n")
+            .append("  'ddl.dw.type' = 'row'\n")
+            .append(") DIVIDED BY DAY 1 tc;")
+            .toString();
+        try (Statement stmt = conn.createStatement()) {
+            int i = stmt.executeUpdate(sql);
+            log.info("create {} count success!", i);
+        } catch (SQLException e) {
+            throw TestUtil.rethrow(e);
+        }
+    }
+
 }

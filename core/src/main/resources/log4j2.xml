@@ -74,11 +74,6 @@
         <!-- 某个Logger所允许的每条日志打印请求都会传递给其LoggerConfig中的所有Appender，也会传递给该LoggerConfig的parent
         LoggerConfig中的Appender，这种现象称为相加性（Additivity）。也就是说，Appender会从LoggerConfig的继承中继承相加性。这种特
         性可以用来汇整某几个logger的输出，可以在声明Logger的配置文件中设置additivity="false"来禁用这种叠加继承 -->
-        <!--记录druid-sql的记录-->
-
-        <!--过滤掉spring和mybatis的一些无用的DEBUG信息-->
-        <Logger name="org.springframework" level="INFO"/>
-        <Logger name="org.mybatis" level="INFO"/>
 
         <!--log4j2 自带过滤日志-->
         <Logger name="org.apache.catalina.startup.DigesterFactory" level="error"/>

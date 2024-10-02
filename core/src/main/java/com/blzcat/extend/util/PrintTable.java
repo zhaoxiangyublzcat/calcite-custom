@@ -12,12 +12,21 @@ import java.util.stream.IntStream;
 
 import lombok.Data;
 
+/**
+ * 封装了打印表格的逻辑
+ */
 @Data
 public class PrintTable {
     private Table table;
-    // 最大列宽：sql查询结果某列内容可能过大，不想完全显示，因此限制最大列宽
+
+    /**
+     * 最大列宽：sql查询结果某列内容可能过大，不想完全显示，因此限制最大列宽
+     */
     private Integer maxWidth;
-    // 最大条数:sql查询结果可能有非常多，通常不必完全显示，因此限制最大条数
+
+    /**
+     * 最大条数:sql查询结果可能有非常多，通常不必完全显示，因此限制最大条数
+     */
     private Integer maxLength;
 
     public PrintTable(ResultSet rs) throws SQLException {
