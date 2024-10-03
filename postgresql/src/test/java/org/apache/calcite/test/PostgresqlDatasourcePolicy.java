@@ -1,4 +1,4 @@
-package com.blzcat.adapter.postgresql;
+package org.apache.calcite.test;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

@@ -1,26 +1,23 @@
-package com.blzcat.adapter.postgresql.ddl;
+package com.blzcat.adapter.ddl;
 
 import org.apache.calcite.sql.SqlIdentifier;
 import org.apache.calcite.sql.SqlNode;
 import org.apache.calcite.sql.SqlNodeList;
 import org.apache.calcite.sql.SqlWriter;
-import org.apache.calcite.sql.ddl.SqlCreateTable;
 import org.apache.calcite.sql.parser.SqlParserPos;
-
-import com.blzcat.ddl.SqlTableOption;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class PostgresqlSqlCreateTable extends SqlCreateTable {
+public class SqlCreateTable extends org.apache.calcite.sql.ddl.SqlCreateTable {
 
-    protected PostgresqlSqlCreateTable(SqlParserPos pos, boolean replace, boolean ifNotExists, SqlIdentifier name,
-        @Nullable SqlNodeList columnList, @Nullable SqlNode query) {
+    protected SqlCreateTable(SqlParserPos pos, boolean replace, boolean ifNotExists, SqlIdentifier name,
+                             @Nullable SqlNodeList columnList, @Nullable SqlNode query) {
         super(pos, replace, ifNotExists, name, columnList, query);
     }
 
-    public PostgresqlSqlCreateTable(SqlParserPos pos, boolean replace, boolean ifNotExists, SqlIdentifier name,
-            @Nullable SqlNodeList columnList, @Nullable SqlNode query, SqlNode owner, SqlNode group,
-            SqlNodeList propertyList, @Nullable Integer dividedDay, @Nullable SqlIdentifier dividedField) {
+    public SqlCreateTable(SqlParserPos pos, boolean replace, boolean ifNotExists, SqlIdentifier name,
+                          @Nullable SqlNodeList columnList, @Nullable SqlNode query, SqlNode owner, SqlNode group,
+                          SqlNodeList propertyList, @Nullable Integer dividedDay, @Nullable SqlIdentifier dividedField) {
         super(pos, replace, ifNotExists, name, columnList, query, owner, group, propertyList, dividedDay, dividedField);
     }
 

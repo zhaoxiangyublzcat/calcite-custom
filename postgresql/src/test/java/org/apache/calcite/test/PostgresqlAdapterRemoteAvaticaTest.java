@@ -1,4 +1,4 @@
-package com.blzcat.adapter.postgresql;
+package org.apache.calcite.test;
 
 import org.apache.calcite.util.TestUtil;
 
@@ -22,17 +22,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 public class PostgresqlAdapterRemoteAvaticaTest {
+
+    static final String URL = "jdbc:calcite:";
+
     private static Connection conn;
+
 
     @BeforeEach
     public void before() throws Exception {
-        String resourcePatch = Objects.requireNonNull(this.getClass().getResource("/"),
+        String resourcePatch = Objects.requireNonNull(this.getClass().getResource("/model.json"),
             "not found").getPath();
 
         Properties config = new Properties();
-        config.put("model", resourcePatch + "model.json");
+        config.put("model", resourcePatch);
 
-        conn = DriverManager.getConnection("jdbc:calcite:", config);
+        conn = DriverManager.getConnection(URL + "parserFactory=com.blzcat.adapter.AdapterSqlParserImpl#FACTORY",
+            config);
     }
 
     @AfterEach
@@ -99,15 +104,15 @@ public class PostgresqlAdapterRemoteAvaticaTest {
 
     @Test
     public void testCreate() {
-        String sql = new StringBuilder()
-            .append("CREATE TABLE IF NOT EXISTS pg.t2(\n")
-            .append("  `ic` INTEGER NOT NULL PRIMARY KEY,\n")
-            .append("  `vc` VARCHAR,\n")
-            .append("  `tc` TIMESTAMP NOT NULL\n")
-            .append(") OWNER TO 'superuser' GROUP TO 'public' TBLPROPERTIES (\n")
-            .append("  'ddl.appendonly.enable' = 'row'\n")
-            .append(") DIVIDED BY DAY 1 tc;")
-            .toString();
+        String sql = """
+                CREATE TABLE IF NOT EXISTS t2(
+                    "ic" INTEGER NOT NULL PRIMARY KEY,
+                    "vc" VARCHAR,
+                    "tc" TIMESTAMP NOT NULL
+                ) OWNER TO 'superuser' GROUP TO 'public' TBLPROPERTIES (
+                    'ddl.appendonly.enable' = 'row'
+                ) DIVIDED BY DAY 1 tc
+                """;
         try (Statement stmt = conn.createStatement()) {
             int i = stmt.executeUpdate(sql);
             log.info("create {} count success!", i);

@@ -1,4 +1,4 @@
-package com.blzcat.ddl;
+package com.blzcat.adapter.ddl;
 
 import org.apache.calcite.sql.SqlCall;
 import org.apache.calcite.sql.SqlKind;

@@ -34,9 +34,10 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- https://mvnrepository.com/artifact/org.apache.calcite/calcite-server -->
             <dependency>
                 <groupId>org.apache.calcite</groupId>
-                <artifactId>calcite-core</artifactId>
+                <artifactId>calcite-server</artifactId>
                 <version>${calcite.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.apache.calcite/calcite-testkit -->
@@ -44,17 +45,20 @@
                 <groupId>org.apache.calcite</groupId>
                 <artifactId>calcite-testkit</artifactId>
                 <version>${calcite.version}</version>
+                <scope>test</scope>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
                 <version>${junit.jupiter.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
                 <version>${junit.jupiter.version}</version>
+                <scope>test</scope>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
             <dependency>
