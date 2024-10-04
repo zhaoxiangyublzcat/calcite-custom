@@ -2,7 +2,7 @@ package org.apache.calcite.test;
 
 import org.apache.calcite.util.TestUtil;
 
-import com.blzcat.util.PrintTable;
+import com.blzcat.adapter.util.PrintTable;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,13 +48,16 @@ public class PostgresqlAdapterRemoteAvaticaTest {
     }
 
     @Test
-    public void testEasySelect() {
-        String sql = "SELECT * FROM \"pg\".\"t1\"";
-        try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            new PrintTable(rs).printTable();
-        } catch (SQLException e) {
-            throw TestUtil.rethrow(e);
+    public void testSelect() throws SQLException {
+        String sql = """
+                SELECT
+                    *
+                FROM
+                    "pg"."t1"
+                """;
+        try (Statement s = conn.createStatement()) {
+            ResultSet r = s.executeQuery(sql);
+            new PrintTable(r).printTable();
         }
     }
 

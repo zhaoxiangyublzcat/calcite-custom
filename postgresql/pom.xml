@@ -21,7 +21,7 @@
     <dependencies>
         <dependency>
             <groupId>com.blzcat</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>adapter</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
