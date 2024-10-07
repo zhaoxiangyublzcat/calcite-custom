@@ -1,4 +1,4 @@
-package com.blzcat.postgresql;
+package org.apache.calcite.postgresql;
 
 import org.apache.calcite.adapter.jdbc.JdbcConvention;
 import org.apache.calcite.adapter.jdbc.JdbcSchema;

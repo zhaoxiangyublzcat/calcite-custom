@@ -18,8 +18,9 @@ import org.apache.calcite.schema.impl.ViewTableMacro;
 import org.apache.calcite.sql.SqlIdentifier;
 import org.apache.calcite.sql.SqlNode;
 import org.apache.calcite.sql.SqlUtil;
+import org.apache.calcite.sql.ddl.AdapterDdlExecutor;
+import org.apache.calcite.sql.ddl.AdapterSqlCreateTable;
 import org.apache.calcite.sql.ddl.SqlColumnDeclaration;
-import org.apache.calcite.sql.ddl.SqlCreateTable;
 import org.apache.calcite.sql.dialect.CalciteSqlDialect;
 import org.apache.calcite.sql.parser.SqlParserPos;
 import org.apache.calcite.sql.validate.SqlValidator;
@@ -28,44 +29,19 @@ import org.apache.calcite.sql2rel.InitializerExpressionFactory;
 import org.apache.calcite.sql2rel.NullInitializerExpressionFactory;
 import org.apache.calcite.util.Pair;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import static com.google.common.base.Preconditions.checkArgument;
 
 import static org.apache.calcite.util.Static.RESOURCE;
 
+@AutoService(DdlExecutor.class)
 @Experimental
-public class AdapterDdlExecutor extends ServerDdlExecutor {
+public class PostgresqlDdlExecutor extends AdapterDdlExecutor {
 
-    public static final AdapterDdlExecutor INSTANCE = new AdapterDdlExecutor();
-
-    private static class ColumnDef {
-        final SqlNode expr;
-        final RelDataType type;
-        final ColumnStrategy strategy;
-
-        private ColumnDef(SqlNode expr, RelDataType type,
-            ColumnStrategy strategy) {
-            this.expr = expr;
-            this.type = type;
-            this.strategy = Objects.requireNonNull(strategy, "strategy");
-            checkArgument(
-                strategy == ColumnStrategy.NULLABLE
-                    || strategy == ColumnStrategy.NOT_NULLABLE
-                    || expr != null);
-        }
-
-        static AdapterDdlExecutor.ColumnDef of(SqlNode expr, RelDataType type,
-            ColumnStrategy strategy) {
-            return new AdapterDdlExecutor.ColumnDef(expr, type, strategy);
-        }
-    }
-
-    public void execute(SqlCreateTable create,
+    public void execute(AdapterSqlCreateTable create,
         CalcitePrepare.Context context) {
         final Pair<CalciteSchema, String> pair =
             schema(context, true, create.name);
@@ -145,16 +121,16 @@ public class AdapterDdlExecutor extends ServerDdlExecutor {
                 @Override
                 public ColumnStrategy generationStrategy(RelOptTable table,
                     int iColumn) {
-                    return columns.get(iColumn).strategy;
+                    return columns.get(iColumn).getStrategy();
                 }
 
                 @Override
                 public RexNode newColumnDefaultValue(RelOptTable table,
                     int iColumn, InitializerContext context) {
                     final ColumnDef c = columns.get(iColumn);
-                    if (c.expr != null) {
+                    if (c.getExpr() != null) {
                         // REVIEW Danny 2019-10-09: Should we support validation for DDL nodes?
-                        final SqlNode validated = context.validateExpression(storedRowType, c.expr);
+                        final SqlNode validated = context.validateExpression(storedRowType, c.getExpr());
                         // The explicit specified type should have the same nullability
                         // with the column expression inferred type,
                         // actually they should be exactly the same.

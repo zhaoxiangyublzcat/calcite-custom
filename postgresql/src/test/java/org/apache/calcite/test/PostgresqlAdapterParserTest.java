@@ -1,5 +1,6 @@
 package org.apache.calcite.test;
 
+import org.apache.calcite.avatica.util.Casing;
 import org.apache.calcite.config.CalciteConnectionProperty;
 
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,7 @@ public class PostgresqlAdapterParserTest {
                 .set(CalciteConnectionProperty.MATERIALIZATIONS_ENABLED,
                     "true")
                 .set(CalciteConnectionProperty.FUN, "standard,postgresql")
+                .set(CalciteConnectionProperty.UNQUOTED_CASING, Casing.TO_LOWER.name())
                 .build());
     }
 

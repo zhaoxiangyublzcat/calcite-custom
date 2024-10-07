@@ -33,6 +33,7 @@
 
         <freemarker.version>2.3.31</freemarker.version>
         <javacc.maven.plugin.version>2.6</javacc.maven.plugin.version>
+        <auto.service.version>1.1.1</auto.service.version>
     </properties>
 
     <dependencyManagement>
@@ -121,6 +122,14 @@
                 <artifactId>avatica-server</artifactId>
                 <version>${avatica.server.version}</version>
             </dependency>
+            <!-- https://mvnrepository.com/artifact/com.google.auto.service/auto-service -->
+            <dependency>
+                <groupId>com.google.auto.service</groupId>
+                <artifactId>auto-service</artifactId>
+                <version>${auto.service.version}</version>
+                <optional>true</optional>
+                <scope>compile</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -167,24 +176,24 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-enforcer-plugin</artifactId>-->
-<!--                <version>3.0.0-M3</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>enforce-order</id>-->
-<!--                        <goals>-->
-<!--                            <goal>enforce</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <rules>-->
-<!--                                <requireDependencyConvergence />-->
-<!--                            </rules>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-enforcer-plugin</artifactId>-->
+            <!--                <version>3.0.0-M3</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <id>enforce-order</id>-->
+            <!--                        <goals>-->
+            <!--                            <goal>enforce</goal>-->
+            <!--                        </goals>-->
+            <!--                        <configuration>-->
+            <!--                            <rules>-->
+            <!--                                <requireDependencyConvergence />-->
+            <!--                            </rules>-->
+            <!--                        </configuration>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
         </plugins>
     </build>
 </project>
